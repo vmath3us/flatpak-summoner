@@ -6,9 +6,4 @@ If found only one occurrence, run, else, ask which one to use. If not found, exi
 Compatible which [Distrobox host exec](https://github.com/89luca89/distrobox).
 
 # Video <h2>
-
-<figure class="video_container">
-  <iframe src="https://www.youtube.com/embed/jJMYajJwTFI" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
-
-
+ View here [youtube](https://www.youtube.com/embed/jJMYajJwTFI")
