@@ -29,17 +29,15 @@ flatpak_and_distrobox_aux_bin_handler(){ #############direct zsh version
     cmd=$1 ###################-preserve name command to search
     shift ####################-remaining entry (path or parameter) on $@
 ########## flatpak list --app is slow, find directly on bin path
-#################### select user OR system (find on user by default)
-    #flatpak_bin_dir="/var/lib/flatpak/exports/bin" ##### if install flatpak on system
-    flatpak_bin_dir="${HOME}/.local/share/flatpak/exports/bin" ##### if install flatpak only --user
+    flatpak_bin_dir=("${HOME}/.local/share/flatpak/exports/bin" "/var/lib/flatpak/exports/bin") ##### -- user as precedence
     path_bin=($(find $flatpak_bin_dir -maxdepth 1 -iname "*"${cmd}"*" -printf '%P\n')) ##### search command
     if [ "${#path_bin[@]}" -eq "1" ]; then   ##### if there is only one result ,run
-        final_command="$flatpak_command ${path_bin} ${@} $end_command" #### create command
+        final_command="$flatpak_command ${path_bin} "${@}" $end_command" #### create command
        printf "$final_command%s\n" ###### show command
        eval ${final_command} ####### finally run
     elif [ "${#path_bin[@]}" -gt "1" ] ; then ########### else, ask why
         select choice in ${path_bin[@]}; do
-            final_command="$flatpak_command $choice ${@} $end_command"  ### create command
+            final_command="$flatpak_command $choice "${@}" $end_command"  ### create command
             printf "$final_command%s\n" ###### show command
             eval ${final_command} ############ finally run
             break       #### escape to select loop
