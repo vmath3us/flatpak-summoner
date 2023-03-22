@@ -29,7 +29,7 @@ flatpak_and_distrobox_aux_bin_handler(){ #############direct zsh version
     cmd=$1 ###################-preserve name command to search
     shift ####################-remaining entry (path or parameter) on $@
 ########## flatpak list --app is slow, find directly on bin path
-    flatpak_bin_dir=("${HOME}/.local/share/flatpak/exports/bin" "/var/lib/flatpak/exports/bin") ##### -- user as precedence
+    flatpak_bin_dir=("${HOME}/.local/share/flatpak/exports/bin" "/var/lib/flatpak/exports/bin") ##### -- user as precedence . Edit to using only user, or only system
     path_bin=($(find $flatpak_bin_dir -maxdepth 1 -iname "*"${cmd}"*" -printf '%P\n')) ##### search command
     if [ "${#path_bin[@]}" -eq "1" ]; then   ##### if there is only one result ,run
         final_command="$flatpak_command ${path_bin} "${@}" $end_command" #### create command
