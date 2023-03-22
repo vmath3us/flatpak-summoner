@@ -1,14 +1,8 @@
 #########################################-flatpak on shell, if or not inside distrobox
 FLT_DTB_HANDLER_DEBUG=0       ############ use any to attached process, example FLT_DTB_HANDLER_DEBUG=1 firefox 
-command_not_found_handle() {
-    ###### if command not exists on path, run
-    #
-flatpak_and_distrobox_aux_bin_handler "${@}"
-}
 flatpak_and_distrobox_aux_bin_handler(){ #############direct zsh version
     if [ $FLT_DTB_HANDLER_DEBUG -eq "0" ] ; then
         end_command='>/dev/null 2>/dev/null &'   #### detached process, not output, close terminal not kill program. close std(out/err) using 1>&- 2>&- crash vscode and others, redirect to dev/null by default
-        end_find_command='2>&-' #### close find stderror by default
     fi
 flatpak_command="flatpak run"
 #################################################################################################
@@ -35,7 +29,11 @@ flatpak_command="flatpak run"
 ########## flatpak list --app is slow, find directly on bin path
 flatpak_bin_dir[1]="${HOME}/.local/share/flatpak/exports/bin"
 flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. Comment to disable. if there are the same names for user and system, the user's appear first
-path_bin=($(find ${flatpak_bin_dir[@]} -maxdepth 1 -iname "*"${cmd}"*" -printf '%P\n' $end_find_command)) ##### search command ,stderror closed by default
+    if [ "$FLT_DTB_HANDLER_DEBUG" -eq "0" ] ; then
+        path_bin=($(find ${flatpak_bin_dir[@]} -maxdepth 1 -iname "*"${cmd}"*" -printf '%P\n' 2>/dev/null)) ##### search command ,stderror closed by default
+    else
+        path_bin=($(find ${flatpak_bin_dir[@]} -maxdepth 1 -iname "*"${cmd}"*" -printf '%P\n'))
+    fi
     if [ "${#path_bin[@]}" -eq "1" ]; then   ##### if there is only one result ,run
       final_command="$flatpak_command ${path_bin} ${entry} $end_command" #### create command
        printf "$final_command%s\n" ###### show command
@@ -53,6 +51,6 @@ path_bin=($(find ${flatpak_bin_dir[@]} -maxdepth 1 -iname "*"${cmd}"*" -printf '
 }
 if [ -n "${ZSH_VERSION-}" ]; then       #### thanks 89luca89 on github.com/89luca89/distrobox
   command_not_found_handler() {
-    command_not_found_handle "$@"
+flatpak_and_distrobox_aux_bin_handler "${@}"
  }
 fi
