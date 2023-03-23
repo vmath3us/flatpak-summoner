@@ -22,10 +22,10 @@ flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. C
     fi
     if [ "${#path_bin[@]}" -eq "1" ]; then   ##### if there is only one result ,run
         if [ "$FLT_DTB_HANDLER_DEBUG" -eq "0" ] ; then
-	        echo -e  "$dhe $path_bin "${@}" >/dev/null 2>/dev/null &\n"
+            echo -e  "$dhe $path_bin "${@}" >/dev/null 2>/dev/null &\n"
             $dhe $path_bin "${@}" >/dev/null 2>/dev/null &  ##close stdout and stderr (>&- 2>&-) crash some programs (example, vscode)
         else
-	        $dhe $path_bin "${@}"
+            $dhe $path_bin "${@}"
         fi
     elif [ "${#path_bin[@]}" -gt "1" ] ; then ########### else, ask why
         human_reader=(${path_bin[@]##*/})
