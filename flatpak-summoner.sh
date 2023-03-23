@@ -27,6 +27,7 @@ flatpak_command="flatpak run"
     for i in ${args[@]}; do
         entry="${entry} \"${i}\""
     done   ####### escape special characters, on links or files. eval try expand = , ?, etc
+    ################---not scape spaces . visit https://github.com/dharple/detox to rename your files
 ########## flatpak list --app is slow, find directly on bin path
 flatpak_bin_dir[1]="${HOME}/.local/share/flatpak/exports/bin"
 flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. Comment to disable. if there are the same names for user and system, the user's appear first
@@ -36,12 +37,12 @@ flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. C
         path_bin=($(find ${flatpak_bin_dir[@]} -maxdepth 1 -iname "*"${cmd}"*" -printf '%P\n'))
     fi
     if [ "${#path_bin[@]}" -eq "1" ]; then   ##### if there is only one result ,run
-      final_command="$flatpak_command ${path_bin} ${entry} $end_command" #### create command
+     final_command="$flatpak_command ${path_bin} ${entry[@]} $end_command" #### create command
        printf "$final_command%s\n" ###### show command
       eval ${final_command} ####### finally run
     elif [ "${#path_bin[@]}" -gt "1" ] ; then ########### else, ask why
         select choice in ${path_bin[@]}; do
-        final_command="$flatpak_command ${choice} "${entry}" $end_command" #### create command
+        final_command="$flatpak_command ${choice} "${entry[@]}" $end_command" #### create command
             printf "$final_command%s\n" ###### show command
             eval ${final_command} ############ finally run
             break       #### escape to select loop
