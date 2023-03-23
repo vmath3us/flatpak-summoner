@@ -1,6 +1,7 @@
 #########################################-flatpak on shell, if or not inside distrobox
+#by vmath3us
 FLT_DTB_HANDLER_DEBUG=0       ############ use any to attached process, example FLT_DTB_HANDLER_DEBUG=1 firefox 
-flatpak_and_distrobox_aux_bin_handler(){ #############direct zsh version
+command_not_found_handle(){ #############direct zsh version
     if [ $FLT_DTB_HANDLER_DEBUG -eq "0" ] ; then
         end_command='>/dev/null 2>/dev/null &'   #### detached process, not output, close terminal not kill program. close std(out/err) using 1>&- 2>&- crash vscode and others, redirect to dev/null by default
     fi
@@ -50,7 +51,7 @@ flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. C
     fi
 }
 if [ -n "${ZSH_VERSION-}" ]; then       #### thanks 89luca89 on github.com/89luca89/distrobox
-  command_not_found_handler() {
-flatpak_and_distrobox_aux_bin_handler "${@}"
- }
+command_not_found_handler() {
+command_not_found_handle "${@}"
+}
 fi
