@@ -31,9 +31,9 @@ flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. C
         human_reader=(${path_bin[@]##*/})
         select choice in ${human_reader[@]}; do
             if [ "$FLT_DTB_HANDLER_DEBUG" -eq "0" ] ; then
-                echo -e  "$dhe ${flatpak_bin_dir[1]} "${@}" >/dev/null 2>/dev/null\n"
+                echo -e  "$dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2>/dev/null\n"
                 $($dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2&>/dev/null &) ||
-                echo -e  "$dhe ${flatpak_bin_dir[1]} "${@}" >/dev/null 2>/dev/null\n" ;
+                echo -e  "$dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2>/dev/null\n" ;
                 $($dhe ${flatpak_bin_dir[2]}/$choice "${@}" >/dev/null 2>/dev/null &)
             else
                 $dhe ${flatpak_bin_dir[1]}/$choice "${@}" ||
