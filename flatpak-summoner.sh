@@ -6,7 +6,7 @@ command_not_found_handle(){ #############direct zsh version
 #################################################################################################
 ######## if your not using distrobox (github.com/89luca89/distrobox) , remove this session
   if [  -e /run/.containerenv ] || [  -e /.dockerenv ]; then
-      dhe="$(which distrobox-host-exec)" ##### is possible install distrobox on /usr/local,/usr, or ~/.local/bin
+      dhe="/usr/bin/distrobox-host-exec" ##### inside container distrobox-host-exec ever on /usr/bin
   fi
 #################################################################################################
 #################################################################################################
