@@ -34,7 +34,7 @@ flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. C
                 echo -e  "$dhe ${flatpak_bin_dir[1]} "${@}" >/dev/null 2>/dev/null\n"
                 $($dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2&>/dev/null &) ||
                 echo -e  "$dhe ${flatpak_bin_dir[1]} "${@}" >/dev/null 2>/dev/null\n" ;
-                $($dhe ${flatpak_bin_dir[2]}/$choice "${@}">/dev/null 2>/dev/null &)
+                $($dhe ${flatpak_bin_dir[2]}/$choice "${@}" >/dev/null 2>/dev/null &)
             else
                 $dhe ${flatpak_bin_dir[1]}/$choice "${@}" ||
                 $dhe ${flatpak_bin_dir[2]}/$choice "${@}"
