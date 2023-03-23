@@ -41,7 +41,7 @@ flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. C
       eval ${final_command} ####### finally run
     elif [ "${#path_bin[@]}" -gt "1" ] ; then ########### else, ask why
         select choice in ${path_bin[@]}; do
-        final_command="$flatpak_command ${path_bin} "${entry}" $end_command" #### create command
+        final_command="$flatpak_command ${choice} "${entry}" $end_command" #### create command
             printf "$final_command%s\n" ###### show command
             eval ${final_command} ############ finally run
             break       #### escape to select loop
