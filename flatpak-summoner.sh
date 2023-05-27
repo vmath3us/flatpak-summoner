@@ -14,7 +14,7 @@ command_not_found_handle(){ #############direct zsh version
     shift ####################-remaining entry (path or parameter) on $@
 ########## flatpak list --app is slow, find directly on bin path
 flatpak_bin_dir[1]="${HOME}/.local/share/flatpak/exports/bin"
-flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. Comment to disable. if there are the same names for user and system, the user's appear first
+#flatpak_bin_dir[1]="/var/lib/flatpak/exports/bin" ##### -- user as prefered. To using system flatpaks, comment previous and uncomment this. system + user not supported for now
     if [ "$FLT_DTB_HANDLER_DEBUG" -eq "0" ] ; then
         path_bin=($(find ${flatpak_bin_dir[@]} -iname "*"${cmd}"*" -print 2>/dev/null))
     else
@@ -22,24 +22,23 @@ flatpak_bin_dir[2]="/var/lib/flatpak/exports/bin" ##### -- user as precedence. C
     fi
     if [ "${#path_bin[@]}" -eq "1" ]; then   ##### if there is only one result ,run
         if [ "$FLT_DTB_HANDLER_DEBUG" -eq "0" ] ; then
+            echo -e "$dhe $path_bin "${@}" >/dev/null 2>/dev/null &\n"
             $dhe $path_bin "${@}" >/dev/null 2>/dev/null &  ##close stdout and stderr (>&- 2>&-) crash some programs (example, vscode)
         else
-            echo -e "$dhe $path_bin "${@}" >/dev/null 2>/dev/null &\n"
+            echo -e "$dhe $path_bin "${@}"\n" &&
             $dhe $path_bin "${@}"
         fi
     elif [ "${#path_bin[@]}" -gt "1" ] ; then ########### else, ask why
         human_reader=(${path_bin[@]##*/})
         select choice in ${human_reader[@]}; do
             if [ "$FLT_DTB_HANDLER_DEBUG" -eq "0" ] ; then
-                $($dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2&>/dev/null &) ||
-                $($dhe ${flatpak_bin_dir[2]}/$choice "${@}" >/dev/null 2>/dev/null &)
+                echo -e  "$dhe ${flatpak_bin_dir[1]}/$choice "${@}">/dev/null 2>/dev/null &\n"
+                $($dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2>/dev/null &)
             else
-                echo -e  "$dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2>/dev/null &\n" ;
-                $dhe ${flatpak_bin_dir[1]}/$choice "${@}" ||
-                echo -e  "$dhe ${flatpak_bin_dir[1]}/$choice "${@}" >/dev/null 2>/dev/null &\n" ;
-                $dhe ${flatpak_bin_dir[2]}/$choice "${@}"
+                echo -e  "$dhe ${flatpak_bin_dir[1]}/$choice "${@}"\n"
+                $dhe ${flatpak_bin_dir[1]}/$choice "${@}"
             fi
-            break       #### escape to select loop
+            break
         done
     else
         exit 127   ##### if not found flatpak exec, find exit 1, command not found code is 127
